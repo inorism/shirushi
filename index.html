@@ -47,8 +47,14 @@ input, textarea{
 
 <button onclick="saveExperience()">保存</button>
 
+  <button onclick="exportData()">
+バックアップ(JSON)
+</button>
+
+  
 <hr>
 
+  
 <h2>保存済み</h2>
 
 <div id="savedData"></div>
@@ -110,7 +116,41 @@ function displayExperiences() {
 }
 
 displayExperiences();
+function exportData() {
 
+  const experiences =
+    JSON.parse(
+      localStorage.getItem("experiences")
+    ) || [];
+
+  const dataStr =
+    JSON.stringify(
+      experiences,
+      null,
+      2
+    );
+
+  const blob =
+    new Blob(
+      [dataStr],
+      { type: "application/json" }
+    );
+
+  const url =
+    URL.createObjectURL(blob);
+
+  const a =
+    document.createElement("a");
+
+  a.href = url;
+
+  a.download =
+    "mystical-experience-backup.json";
+
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
 </script>
 
 </body>
