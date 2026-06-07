@@ -2,13 +2,82 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>しるし</title>
+<title>岩戸開き</title>
 </head>
 <body>
 
-<h1>あめのしるし</h1>
+<h1>神秘体験ログ</h1>
 
-<p>GitHub Pages成功！</p>
+<p>体験日</p>
+<input type="date" id="date">
+
+<p>タイトル</p>
+<input type="text" id="title">
+
+<p>内容</p>
+<textarea id="content" rows="5" cols="50"></textarea>
+
+<br><br>
+
+<button onclick="saveExperience()">保存</button>
+
+<h2>保存済み</h2>
+
+<div id="savedData"></div>
+
+<script>
+
+function saveExperience() {
+
+  const date =
+    document.getElementById("date").value;
+
+  const title =
+    document.getElementById("title").value;
+
+  const content =
+    document.getElementById("content").value;
+
+  const experience = {
+    date: date,
+    title: title,
+    content: content
+  };
+
+  localStorage.setItem(
+    "latestExperience",
+    JSON.stringify(experience)
+  );
+
+  displayExperience();
+}
+
+function displayExperience() {
+
+  const data =
+    localStorage.getItem("latestExperience");
+
+  if (!data) return;
+
+  const experience =
+    JSON.parse(data);
+
+  document.getElementById(
+    "savedData"
+  ).innerHTML = `
+    <p>
+      ${experience.date}
+      ${experience.title}
+    </p>
+    <p>
+      ${experience.content}
+    </p>
+  `;
+}
+
+displayExperience();
+
+</script>
 
 </body>
 </html>
