@@ -58,7 +58,14 @@ input, textarea{
 <button onclick="importData()">
 復元(JSON)
 </button>
+
   
+<p>タグ検索</p>
+
+<input
+  type="text"
+  id="searchTag"
+  oninput="displayExperiences()">
 <hr>
 
   
@@ -101,10 +108,25 @@ function displayExperiences() {
 
   let html = "";
 
-  experiences
-    .slice()
-    .reverse()
-    .forEach(exp => {
+const searchTag =
+  document
+  .getElementById("searchTag")
+  .value
+  .toLowerCase();
+
+experiences
+  .slice()
+  .reverse()
+  .forEach(exp => {
+
+    if (
+      searchTag &&
+      !exp.tags
+        .toLowerCase()
+        .includes(searchTag)
+    ) {
+      return;
+    }
 
       html += `
         <div class="entry">
