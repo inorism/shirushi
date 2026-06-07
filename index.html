@@ -117,7 +117,7 @@ const searchTag =
 experiences
   .slice()
   .reverse()
-  .forEach(exp => {
+ .forEach((exp, index) => {
 
     if (
       searchTag &&
@@ -128,16 +128,23 @@ experiences
       return;
     }
 
-      html += `
-        <div class="entry">
-          <strong>${exp.date}</strong><br>
-          <strong>${exp.title}</strong><br>
-          <div class="tags">
-            ${exp.tags}
-          </div>
-          <p>${exp.content}</p>
-        </div>
-      `;
+html += `
+  <div class="entry">
+    <strong>${exp.date}</strong><br>
+    <strong>${exp.title}</strong><br>
+
+    <div class="tags">
+      ${exp.tags}
+    </div>
+
+    <p>${exp.content}</p>
+
+    <button onclick="deleteExperience(${experiences.length - 1 - index})">
+      削除
+    </button>
+
+  </div>
+`;
 
     });
 
@@ -183,6 +190,31 @@ function exportData() {
 
   function importData() {
 
+function deleteExperience(index) {
+
+  if (
+    !confirm(
+      "この記録を削除しますか？"
+    )
+  ) {
+    return;
+  }
+
+  let experiences =
+    JSON.parse(
+      localStorage.getItem("experiences")
+    ) || [];
+
+  experiences.splice(index, 1);
+
+  localStorage.setItem(
+    "experiences",
+    JSON.stringify(experiences)
+  );
+
+  displayExperiences();
+}
+    
   const file =
     document.getElementById(
       "importFile"
