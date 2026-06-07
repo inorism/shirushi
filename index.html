@@ -3,6 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <title>岩戸開き</title>
+
+<style>
+body{
+  font-family:sans-serif;
+  max-width:800px;
+  margin:auto;
+  padding:20px;
+}
+
+input, textarea{
+  width:100%;
+  margin-bottom:10px;
+}
+
+.entry{
+  border:1px solid #ccc;
+  padding:10px;
+  margin-top:10px;
+}
+
+.tags{
+  color:#666;
+}
+</style>
+
 </head>
 <body>
 
@@ -14,12 +39,15 @@
 <p>タイトル</p>
 <input type="text" id="title">
 
-<p>内容</p>
-<textarea id="content" rows="5" cols="50"></textarea>
+<p>タグ（カンマ区切り）</p>
+<input type="text" id="tags">
 
-<br><br>
+<p>内容</p>
+<textarea id="content" rows="6"></textarea>
 
 <button onclick="saveExperience()">保存</button>
+
+<hr>
 
 <h2>保存済み</h2>
 
@@ -29,53 +57,59 @@
 
 function saveExperience() {
 
-  const date =
-    document.getElementById("date").value;
-
-  const title =
-    document.getElementById("title").value;
-
-  const content =
-    document.getElementById("content").value;
-
   const experience = {
-    date: date,
-    title: title,
-    content: content
+    date: document.getElementById("date").value,
+    title: document.getElementById("title").value,
+    tags: document.getElementById("tags").value,
+    content: document.getElementById("content").value
   };
 
+  let experiences =
+    JSON.parse(localStorage.getItem("experiences")) || [];
+
+  experiences.push(experience);
+
   localStorage.setItem(
-    "latestExperience",
-    JSON.stringify(experience)
+    "experiences",
+    JSON.stringify(experiences)
   );
 
-  displayExperience();
+  displayExperiences();
+
+  document.getElementById("title").value = "";
+  document.getElementById("tags").value = "";
+  document.getElementById("content").value = "";
 }
 
-function displayExperience() {
+function displayExperiences() {
 
-  const data =
-    localStorage.getItem("latestExperience");
+  let experiences =
+    JSON.parse(localStorage.getItem("experiences")) || [];
 
-  if (!data) return;
+  let html = "";
 
-  const experience =
-    JSON.parse(data);
+  experiences
+    .slice()
+    .reverse()
+    .forEach(exp => {
 
-  document.getElementById(
-    "savedData"
-  ).innerHTML = `
-    <p>
-      ${experience.date}
-      ${experience.title}
-    </p>
-    <p>
-      ${experience.content}
-    </p>
-  `;
+      html += `
+        <div class="entry">
+          <strong>${exp.date}</strong><br>
+          <strong>${exp.title}</strong><br>
+          <div class="tags">
+            ${exp.tags}
+          </div>
+          <p>${exp.content}</p>
+        </div>
+      `;
+
+    });
+
+  document.getElementById("savedData").innerHTML = html;
 }
 
-displayExperience();
+displayExperiences();
 
 </script>
 
