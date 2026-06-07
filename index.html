@@ -46,11 +46,18 @@ input, textarea{
 <textarea id="content" rows="6"></textarea>
 
 <button onclick="saveExperience()">保存</button>
-
+<br><br>
   <button onclick="exportData()">
 バックアップ(JSON)
 </button>
+<input
+  type="file"
+  id="importFile"
+  accept=".json">
 
+<button onclick="importData()">
+復元(JSON)
+</button>
   
 <hr>
 
@@ -151,6 +158,57 @@ function exportData() {
 
   URL.revokeObjectURL(url);
 }
+
+  function importData() {
+
+  const file =
+    document.getElementById(
+      "importFile"
+    ).files[0];
+
+  if (!file) {
+
+    alert(
+      "JSONファイルを選択してください"
+    );
+
+    return;
+  }
+
+  const reader =
+    new FileReader();
+
+  reader.onload = function(e) {
+
+    try {
+
+      const experiences =
+        JSON.parse(
+          e.target.result
+        );
+
+      localStorage.setItem(
+        "experiences",
+        JSON.stringify(experiences)
+      );
+
+      displayExperiences();
+
+      alert("復元しました");
+
+    } catch {
+
+      alert(
+        "JSONの読み込みに失敗しました"
+      );
+
+    }
+
+  };
+
+  reader.readAsText(file);
+}
+  
 </script>
 
 </body>
